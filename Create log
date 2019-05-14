@@ -1,0 +1,13 @@
+       public static void WriteLog(string message)
+        {
+            string filePath = Path.Combine(Properties.Settings.Default.path, $@"log{DateTime.Now.ToString("dd_MM_yyyy")}.txt");
+            if (!File.Exists(filePath))
+            {
+                File.Create(filePath).Dispose();
+            }
+
+            using (StreamWriter file = File.AppendText(filePath))
+            {
+                file.WriteLine(message + $"    {DateTime.Now.ToString("hh:mm:ss")}");
+            }
+        }
