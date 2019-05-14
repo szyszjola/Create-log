@@ -1,0 +1,16 @@
+public void CreateZip()
+{
+            string zipPath = mainPath + "zip" + DateTime.Now.AddDays(-1).ToString("yyyy_MM_dd") + ".zip";
+            var files = Directory.GetFiles(mainPath, "*.xlsx", SearchOption.TopDirectoryOnly);
+
+            using (FileStream zipToOpen = new FileStream(zipPath, FileMode.Create))
+            {
+                using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Create))
+                {
+                    foreach (var file in files)
+                    {
+                        archive.CreateEntryFromFile(file, file.Substring(file.LastIndexOf(@"\") + 1), CompressionLevel.Fastest);
+                    }
+                }
+            }
+}
