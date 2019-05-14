@@ -1,0 +1,51 @@
+  public Email(string host, int port, string email, string password)
+        {
+            this.host = host;
+            this.port = port;
+            this.email = email;
+            this.password = password;
+            zb = new ZarzadcaBazy();
+            mainPath = Path.Combine(Properties.Settings.Default.path, @"Folder\");
+        }
+
+public bool Send(string emailTo, string subject, Attachment attachment)
+        {
+            try
+            {
+                SmtpClient client = new SmtpClient();
+                client.Host = host;
+                client.Port = port;
+                client.UseDefaultCredentials = false;
+                client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                client.Credentials = new NetworkCredential(email, password);
+                client.Timeout = 6000000;
+
+                MailMessage mail = new MailMessage();
+                mail.IsBodyHtml = true;
+                mail.Body = "<i> Message body </i>";
+                mail.Body += @" <br> <img src='" + Path.GetTempPath() + "image.png" + @"'/>";
+
+                foreach (string m in emailTo.Split(';'))
+                {
+                    mail.To.Add(new MailAddress(m));
+                }
+
+                if (attachment != null)
+                {
+                    mail.Attachments.Add(attachment);
+                }
+
+                mail.From = new MailAddress(email);
+                mail.Subject = subject;
+                mail.DeliveryNotificationOptions = DeliveryNotificationOptions.OnSuccess;
+                client.Send(mail);
+                attachment.Dispose();
+                Console.WriteLine("Send correctly");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
