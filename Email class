@@ -39,6 +39,7 @@ public bool Send(string emailTo, string subject, Attachment attachment)
                 mail.Subject = subject;
                 mail.DeliveryNotificationOptions = DeliveryNotificationOptions.OnSuccess;
                 client.Send(mail);
+                if(attachment != null)
                 attachment.Dispose();
                 Console.WriteLine("Send correctly");
                 return true;
